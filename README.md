@@ -15,7 +15,7 @@ Method for NLP project
 This project is built using Python >= 3.6
 
 The following packages are needed:
-* ???
+* `lxml` (see https://stackoverflow.com/a/19940637)
 * ???
 
 ## Theorical basis
