@@ -1,0 +1,53 @@
+<word id=carrot><!-- the id should be either the definition id in the dictionary or a combination of the word and its POS -->
+    <name>CARROT</name><!-- the text of the word -->
+    <pos>NOUN</pos><!-- the POS -->
+    <properties>COUNTABLE</properties><!-- the indication next to the POS in the definition -->
+
+    <wordforms><!-- could be removed -->
+        <wordform type=singular>carrot</wordform>
+        <wordform type=plural>carrots</wordform>
+    </wordforms>
+
+    <definitions>
+        <definition><!-- the first definition -->
+            <text>
+                <defword>a</defword>
+                <defword>long</defword>
+                <defword see=hard_1>hard</defword>
+                <defword see=orrange_1>orange</defword>
+                <defword see=vegetable>vegetable</defword>
+                <defword>that</defword>
+                <defword see=grow>grows</defword>
+                <defword>under</defword>
+                <defword>the</defword>
+                <defword see=ground_1>ground</defword>
+                <defword>and</defword>
+                <defword>has</defword>
+                <defword see=green_1>green</defword>
+                <defword see=leaves>leaves</defword>
+                <defword>on</defword>
+                <defword>its</defword>
+                <defword>top</defword>
+            </text>
+        </definition>
+
+        <definition><!-- the second definition -->
+            <text>
+                <defword>something</defword>
+                <defword>that</defword>
+                <defword>someone</defword>
+                <defword see=promise_1>promises</defword>
+                <defword>you</defword>
+                <defword>as</defword>
+                <defword>a</defword>
+                <defword>way</defword>
+                <defword>of</defword>
+                <defword see=encouraging>encouraging</defword>
+                <defword>you</defword>
+                <defword>to</defword>
+                <defword>do</defword>
+                <defword>something</defword>
+            </text>
+        </definition>
+    </definitions>
+</word>
