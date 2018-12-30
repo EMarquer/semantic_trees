@@ -1,7 +1,6 @@
 <word id=carrot><!-- the id should be either the definition id in the dictionary or a combination of the word and its POS -->
     <name>CARROT</name><!-- the text of the word -->
     <pos>NOUN</pos><!-- the POS -->
-    <properties>COUNTABLE</properties><!-- the indication next to the POS in the definition -->
 
     <wordforms><!-- could be removed -->
         <wordform type=singular>carrot</wordform>
