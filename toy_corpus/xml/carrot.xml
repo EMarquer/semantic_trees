@@ -1,3 +1,9 @@
+<!--
+https://www.macmillandictionary.com/dictionary/british/carrot
+1. a long hard orange vegetable that grows under the ground and has green leaves on its top
+2. something that someone promises you as a way of encouraging you to do something
+-->
+
 <word id=carrot><!-- the id should be either the definition id in the dictionary or a combination of the word and its POS -->
     <name>CARROT</name><!-- the text of the word -->
     <pos>NOUN</pos><!-- the POS -->
