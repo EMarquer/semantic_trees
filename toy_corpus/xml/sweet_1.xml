@@ -1,6 +1,4 @@
 <!--
-NOT DONE YET, HERE IS A SAMPLE
-
 https://www.macmillandictionary.com/dictionary/british/sweet_1
 1. tasting like sugar
 2. pleasant in smell, sound, or appearance
@@ -8,3 +6,75 @@ https://www.macmillandictionary.com/dictionary/british/sweet_1
 3. kind, gentle, or nice to other people
 4. cool, unusual or just downright awesome
 -->
+
+<word id=sweet_1><!-- the id should be either the definition id in the dictionary or a combination of the word and its POS -->
+    <name>SWEET</name><!-- the text of the word -->
+    <pos>ADJECTIVE</pos><!-- the POS -->
+
+    <wordforms><!-- could be removed -->
+        <wordform type=adjective>sweet</wordform>
+        <wordform type=comparative>sweeter</wordform>
+        <wordform type=superlative>sweetest</wordform>
+    </wordforms>
+
+    <definitions>
+        <definition><!-- the first definition -->
+            <text>
+                <defword see=tasting>tasting</defword>
+                <defword see=like_1>like</defword>
+                <defword see=sugar_1>sugar</defword>
+            </text>
+        </definition>
+
+        <definition><!-- the second definition -->
+            <text>
+                <defword see=pleasant>pleasant</defword>
+                <defword>in</defword>
+                <defword see=smell_1>smell</defword>
+                <punct type=comma />
+                <defword see=sound_1>sound</defword>
+                <punct type=comma />
+                <defword>or</defword>
+                <defword see=appearance>appearance</defword>
+            </text>
+            <definitions><!-- the nested definitions -->
+                <definition><!-- the first nested definition -->
+                    <text>
+                        <defword see=making>making</defword>
+                        <defword>you</defword>
+                        <defword see=experience_1>experience</defword>
+                        <defword>a</defword>
+                        <defword see=pleasant>pleasant</defword>
+                        <defword see=feeling_1>feeling</defword>
+                    </text>
+                </definition>
+            </definitions>
+        </definition>
+
+        <definition><!-- the third definition -->
+            <text>
+                <defword see=kind_1>kind</defword>
+                <punct type=comma />
+                <defword see=gentle>gentle</defword>
+                <punct type=comma />
+                <defword>or</defword>
+                <defword see=nice>nice</defword>
+                <defword>to</defword>
+                <defword>other</defword>
+                <defword see=people_1>people</defword>
+            </text>
+        </definition>
+
+        <definition><!-- the fourth definition -->
+            <text>
+                <defword see=cool_1>cool</defword>
+                <punct type=comma />
+                <defword see=unusual>unusual</defword>
+                <defword>or</defword>
+                <defword see=just_1>just</defword>
+                <defword see=downright_1>downright</defword>
+                <defword see=awesome>awesome</defword>
+            </text>
+        </definition>
+    </definitions>
+</word>
