@@ -13,11 +13,11 @@
 
 # TODO
 1. Semantic tree example, class and unit test (we call similar procedures "test driven programing")
-    1. [ ] Manually create a paper version of the semantic tree of one or two words, containing
+    1. [x] Manually create a paper version of the semantic tree of one or two words, containing
         * the relevant words of the first definition (those with the UD tag "NOUN", "VERB", "ADJ", "ADV" or "PART";
         you can use [http://lindat.mff.cuni.cz/services/udpipe/](http://lindat.mff.cuni.cz/services/udpipe/) to get the tags)
         * the "modifiers" of those words ("not", for example)
-    2. [ ] Create a class able to represent such a tree in python
+    2. [ ] **[WIP]** Create a class able to represent such a tree in python
     3. [ ] Build the tree for the words in python (create a small script that produce the correct object instance), it will
     serve in the test cases as a target output
     4. [ ] Create the tests for a `build_semantic_tree(word)` function (it does not exist yet), it will serve as a target to
