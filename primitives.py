@@ -1,0 +1,20 @@
+class Primitives():
+    primitives_class_str = {
+        "Substantives": {"I", "YOU", "SOMEONE", "PERSON", "PEOPLE", "SOMETHING", "THING", "BODY"},
+        "Relational substantives": {"KIND", "PART"},
+        "Determiners": {"THIS", "THE SAME", "OTHER", "ELSE", "ANOTHER"},
+        "Quantifiers": {"ONE", "TWO", "SOME", "ALL", "MUCH", "MANY", "LITTLE", "FEW"},
+        "Evaluators": {"GOOD", "BAD"},
+        "Descriptors": {"BIG", "SMALL"},
+        "Mental predicates": {"THINK", "KNOW", "WANT", "FEEL", "SEE", "HEAR"},
+        "Speech": {"SAY", "WORDS", "TRUE"},
+        "Actions, events, movement, contact": {"DO", "HAPPEN", "MOVE", "TOUCH"},
+        "Location, existence, possession, specification": {"BE", "SOMEWHERE", "THERE IS", "HAVE", "BE", "SOMEONE",
+                                                           "SOMETHING"},
+        "Life and death": {"LIVE", "DIE"},
+        "Time": {"WHEN", "TIME", "NOW", "BEFORE", "AFTER", "A LONG TIME", "A SHORT TIME", "FOR SOME TIME", "MOMENT"},
+        "Space": {"WHERE", "PLACE", "HERE", "ABOVE", "BELOW", "FAR", "NEAR", "SIDE", "INSIDE"},
+        "Logical concepts": {"NOT", "MAYBE", "CAN", "BECAUSE", "IF"},
+        "Intensifier, augmentor": {"VERY", "MORE"},
+        "Similarity": {"LIKE", "AS", "WAY"},
+    }
