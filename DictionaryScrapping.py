@@ -119,16 +119,16 @@ for i in range(len(definitions)):
     # list for checking in the next step.
     url_words = [i2.text for i2 in urls]
 
-    # we create an empty list that we will store all the URLs for the relevant words in a dictionary entry
-    dict_processed["definitions"]["def_"+str(i+1)]["urls"] = []
+    # we create an empty set that we will store all the URLs for the relevant words in a dictionary entry
+    dict_processed["definitions"]["def_"+str(i+1)]["urls"] = set()
 
     for word in relevant_words:
         for url in urls:
-            if word == url.text:
-                dict_processed["definitions"]["def_"+str(i+1)]["urls"].append(url['href'])
-        if word not in url_words:
+            if word.lower() == url.text:
+                dict_processed["definitions"]["def_"+str(i+1)]["urls"].add(url['href'])
+        if word.lower() not in url_words:
             mcm_urlstructure = "https://www.macmillandictionary.com/dictionary/{}/{}"
-            dict_processed["definitions"]["def_"+str(i+1)]["urls"].append(mcm_urlstructure.format(britamerican_input, word))
+            dict_processed["definitions"]["def_"+str(i+1)]["urls"].add(mcm_urlstructure.format(britamerican_input, word.lower()))
 
 if __name__ == "__main__":
     print (dict_processed)

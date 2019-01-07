@@ -9,8 +9,8 @@ https://www.macmillandictionary.com/dictionary/british/carrot
     <pos>NOUN</pos><!-- the POS -->
 
     <wordforms><!-- could be removed -->
-        <wordform type=singular>carrot</wordform>
-        <wordform type=plural>carrots</wordform>
+        <wordform type='singular'>carrot</wordform>
+        <wordform type='plural'>carrots</wordform>
     </wordforms>
 
     <definitions>
@@ -18,18 +18,18 @@ https://www.macmillandictionary.com/dictionary/british/carrot
             <text>
                 <defword>a</defword>
                 <defword>long</defword>
-                <defword see=hard_1>hard</defword>
-                <defword see=orrange_1>orange</defword>
-                <defword see=vegetable>vegetable</defword>
+                <defword see="hard_1">hard</defword>
+                <defword see="orange_1">orange</defword>
+                <defword see="vegetable">vegetable</defword>
                 <defword>that</defword>
-                <defword see=grow>grows</defword>
+                <defword see="grow">grows</defword>
                 <defword>under</defword>
                 <defword>the</defword>
-                <defword see=ground_1>ground</defword>
+                <defword see="ground_1">ground</defword>
                 <defword>and</defword>
                 <defword>has</defword>
-                <defword see=green_1>green</defword>
-                <defword see=leaves>leaves</defword>
+                <defword see="green_1">green</defword>
+                <defword see="leaves">leaves</defword>
                 <defword>on</defword>
                 <defword>its</defword>
                 <defword>top</defword>
@@ -41,13 +41,13 @@ https://www.macmillandictionary.com/dictionary/british/carrot
                 <defword>something</defword>
                 <defword>that</defword>
                 <defword>someone</defword>
-                <defword see=promise_1>promises</defword>
+                <defword see="promise_1">promises</defword>
                 <defword>you</defword>
                 <defword>as</defword>
                 <defword>a</defword>
                 <defword>way</defword>
                 <defword>of</defword>
-                <defword see=encouraging>encouraging</defword>
+                <defword see="encouraging">encouraging</defword>
                 <defword>you</defword>
                 <defword>to</defword>
                 <defword>do</defword>
