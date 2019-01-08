@@ -71,6 +71,8 @@ class TreeBuilder():
 
                 for word in word_to_process.get_definition():
 
+                    print("Current definition word: {}".format(word), end=" ")
+
                     # [fail safe] we can add here a checking to verify that a word does not contain itself in its
                     # definition
                     if word_to_process_str == word:
@@ -99,6 +101,8 @@ class TreeBuilder():
 
                         # finally, we add the word as a children of currently processed word
                         word_to_process.children.add(word_)
+
+                    print("Done")
 
                 # once the definition is completely treated, the word is processed, we can add it  to the processed
                 # words
