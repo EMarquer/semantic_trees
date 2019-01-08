@@ -103,6 +103,7 @@ class TreeBuilder():
                 # once the definition is completely treated, the word is processed, we can add it  to the processed
                 # words
                 self.processed_words[word_to_process_str] = word_to_process
+                print ("word {} has been processed".format(word_to_process_str))
 
         # Return the word object of the root word
         return root_word_
