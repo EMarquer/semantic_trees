@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 
 from typing import Collection, Set, Any
 import dictionary_scrapping
@@ -6,16 +6,16 @@ import dictionary_scrapping
 class Node:
     # Type hints for internal variables
     name: str
-    children: Set[Node]
+    children: Set
 
     def __init__(self, name: str):
         self.name = name
         self.children = set()
 
-    def add(self, child: Node) -> None:
+    def add(self, child) -> None:
         self.children.add(child)
 
-    def add_all(self, children: Collection[Node]) -> None:
+    def add_all(self, children: Collection) -> None:
         for child in children:
             self.children.add(child)
 
@@ -38,8 +38,8 @@ class Word(Node):
                          "{} children".format(len_))
         return "Word \"{}\": {}".format(self.name, children_text)
 
-    def get_definition() -> Set[str]:
-        definitions = dictionary_scrapping.extract_definition(self.name, dictionary)
+    def get_definition(self) -> Set[str]:
+        definitions = dictionary_scrapping.extract_definition(self.name)
         first_definition = definitions["definitions"]["def_1"]['relevant_words']
 
         return first_definition

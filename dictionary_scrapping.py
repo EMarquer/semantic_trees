@@ -41,8 +41,10 @@ def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
     # grab the page source content
     dict_fulldata = BeautifulSoup(request, "lxml")
 
-    return dict_fulldata
-
+    if "Sorry, no search result for" in dict_fulldata.find_all({"h1"})[0].text:
+        return "This word is not in the dictionary"
+    else:
+        return dict_fulldata
 
 def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
     """
