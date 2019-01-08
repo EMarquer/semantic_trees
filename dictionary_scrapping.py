@@ -12,40 +12,6 @@ UDPIPE_URL_STRUCTURE = "http://lindat.mff.cuni.cz/services/udpipe/api/process?to
 # set the list of POS we are interested in
 POS_OF_INTEREST = ["NOUN", "VERB", "ADJ", "ADV", "PART"]
 
-
-def get_url(word: str, dictionary: str = 'british') -> str:
-    """
-    Produce the URL of the definition of a word
-
-    :param word: word to search in the dictionary
-    :param dictionary: possible values are: 'british' and 'american'
-    :return: the URL of the word in the dictionary
-    """
-    return "https://www.macmillandictionary.com/dictionary/{}/{}".format(dictionary, word)
-
-
-def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
-    """
-    Produce the HTML content of the definition of a word
-
-    :param word: word to search in the dictionary
-    :param dictionary: possible values are: 'british' and 'american'
-    :return: the HTML content of the definition in the dictionary
-    """
-    # set the url of the MacMillan dictionary entry for the word
-    dict_url = get_url(word, dictionary)
-
-    # open a connexion to the dictionary page
-    request = urllib.request.urlopen(dict_url)
-
-    # grab the page source content
-    dict_fulldata = BeautifulSoup(request, "lxml")
-
-    if "Sorry, no search result for" in dict_fulldata.find_all({"h1"})[0].text:
-        return "This word is not in the dictionary"
-    else:
-        return dict_fulldata
-
 def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
     """
     takes a string, puts it in a UDPipe API-usable format, calls UDPipe with tokeniser and tagger,
@@ -83,6 +49,51 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
                 pos_list.append(__[3])
 
     return word_list, pos_list
+
+def get_stem_word(word: str) -> str:
+    """
+    Get the stem of the word being searched
+
+    :param word: word input by the user, which we will obtain the stem for
+    :return: the stem of the word we are searching for
+    """
+    # we use the udpipe_checker to access UDPipe to obtain the stem of the word
+
+    return udpipe_checker(word)[0][0]
+
+def get_url(word: str, dictionary: str = 'british') -> str:
+    """
+    Produce the URL of the definition of a word
+
+    :param word: word to search in the dictionary, which we will obtain the stem for
+    :param dictionary: possible values are: 'british' and 'american'
+    :return: the URL of the word in the dictionary
+    """
+
+    return "https://www.macmillandictionary.com/dictionary/{}/{}".format(dictionary, word)
+
+
+def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
+    """
+    Produce the HTML content of the definition of a word
+
+    :param word: word to search in the dictionary
+    :param dictionary: possible values are: 'british' and 'american'
+    :return: the HTML content of the definition in the dictionary
+    """
+    # set the url of the MacMillan dictionary entry for the word
+    dict_url = get_url(word, dictionary)
+
+    # open a connexion to the dictionary page
+    request = urllib.request.urlopen(dict_url)
+
+    # grab the page source content
+    dict_fulldata = BeautifulSoup(request, "lxml")
+
+    if "Sorry, no search result for" in dict_fulldata.find_all({"h1"})[0].text:
+        raise Exception('The word {} is not in the dictionary'.format(word))
+    else:
+        return dict_fulldata
 
 
 def extract_definition(word_input: str, dictionary: str = 'british'):
@@ -147,7 +158,7 @@ def extract_definition(word_input: str, dictionary: str = 'british'):
 
 if __name__ == "__main__":
     # ##### 1. Ask for word, ask for British or American English.
-    word = 'sweet'  # input("What is the word you want to build the semantic tree for?")
+    word = 'randomeapple'  # input("What is the word you want to build the semantic tree for?")
     dictionary = 'british'  # input("Do you want the British or the American English definition?")
 
     dict_processed = extract_definition(word, dictionary)
