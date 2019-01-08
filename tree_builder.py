@@ -1,6 +1,7 @@
 
 from typing import Any, Dict, Optional
 
+from dictionary_scrapping import get_stem_word
 from word_tree import Word, Primitive, Node
 from primitives import get_primitives_dict
 
@@ -33,6 +34,8 @@ class TreeBuilder():
         :param max_depth: the maximum depth for the search
         :return: a Word object representing a word, connected to all the necessary words
         """
+        root_word = get_lemma_word(root_word)
+
         # if the word has already been processed or is a primitive, we return the already processed version
         if root_word in self.processed_words.keys():
             return self.processed_words[root_word]

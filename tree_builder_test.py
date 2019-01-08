@@ -16,7 +16,6 @@ class TreeBuilderTest(unittest.TestCase):
     def setUp(self):
         # fictive words
 
-
         pass
 
     def test_init(self) -> None:
@@ -106,7 +105,7 @@ class TreeBuilderTest(unittest.TestCase):
 
         class PhantomWord(Word):
             """
-            Phantom word class with specific functionement
+            Phantom word class with specific function
             """
 
             def get_definition(self):
