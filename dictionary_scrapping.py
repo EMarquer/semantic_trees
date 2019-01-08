@@ -77,7 +77,7 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
 
             # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
             if __[3] in pos_of_interest:
-                word_list.append(__[1])
+                word_list.append(__[2])
                 pos_list.append(__[3])
 
     return word_list, pos_list

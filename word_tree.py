@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Collection, Set, Any
-
+import dictionary_scrapping
 
 class Node:
     # Type hints for internal variables
@@ -37,6 +37,12 @@ class Word(Node):
                          "1 child" if len_ == 1 else
                          "{} children".format(len_))
         return "Word \"{}\": {}".format(self.name, children_text)
+
+    def get_definition() -> Set[str]:
+        definitions = dictionary_scrapping.extract_definition(self.name, dictionary)
+        first_definition = definitions["definitions"]["def_1"]['relevant_words']
+
+        return first_definition
 
 
 class Primitive(Node):
@@ -148,6 +154,7 @@ if __name__ == "__main__":
     it is not truly a problem as both words are defined in the dictionary in a simple way"""
 
     # --------------
+
     # Here are examples of how to combine the Nodes to create a tree
 
     a, b, c, d = Primitive('a'), Primitive('b'), Primitive('c'), Primitive('d')
