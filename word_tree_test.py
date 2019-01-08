@@ -6,6 +6,8 @@ class TestWordNames(unittest.TestCase):
     ("purplechicken", "purplechicken"),
     ("waterbomb","waterbomb"))
 
+    known_values2 = ("question", {"ask", "want", "information"})
+    known_values3 = "randomapple"
 
     def test_Node_init(self):
         '''a Node initiated should return its own name'''
@@ -56,13 +58,20 @@ class TestWordNames(unittest.TestCase):
             self.assertEqual(test_Primitive_name, output)
 
     def test_Word_get_definition(self):
-        '''a Word's defintion should return its own name'''
+        '''a Word's defintion's should only include the words that deemed to be relevant and should not include primitives'''
 
-        for input, output in self.known_values:
+        # case #1 the word exists and the results should be correct
+        word_in, output = self.known_values2
+        test_Word = word_tree.Word(word_in)
+        test_Word_def = test_Word.get_definition()
+        self.assertEqual(test_Word_def, output)
 
-            test_Word = word_tree.Word(input)
-            test_Word_name = test_Word.name
-            self.assertEqual(test_Word_name, output)
+        # case #2 the word does not exist
+        test_Word = word_tree.Word(self.known_values3)
+        with self.assertRaises(ValueError):
+            test_Word.get_definition()
+
+
 
 if __name__ == '__main__':
     unittest.main()

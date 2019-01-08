@@ -91,7 +91,7 @@ def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
     dict_fulldata = BeautifulSoup(request, "lxml")
 
     if "Sorry, no search result for" in dict_fulldata.find_all({"h1"})[0].text:
-        raise Exception('The word {} is not in the dictionary'.format(word))
+        raise ValueError('The word {} is not in the dictionary'.format(word))
     else:
         return dict_fulldata
 

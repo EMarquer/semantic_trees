@@ -40,7 +40,7 @@ class Word(Node):
 
     def get_definition(self) -> Set[str]:
         definitions = dictionary_scrapping.extract_definition(self.name)
-        first_definition = definitions["definitions"]["def_1"]['relevant_words']
+        first_definition = set(definitions["definitions"]["def_1"]['relevant_words'])
 
         return first_definition
 
