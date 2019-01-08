@@ -3,7 +3,7 @@ from typing import Dict
 from word_tree import Primitive
 
 
-def get_primitives_dict() -> Dict[Primitive]:
+def get_primitives_dict() -> Dict[str, Primitive]:
     """
     Create a dictionary of all the primitives described in
     https://intranet.secure.griffith.edu.au/schools-departments/natural-semantic-metalanguage/in-brief
@@ -41,3 +41,8 @@ def get_primitives_dict() -> Dict[Primitive]:
     primitives = {primitive: Primitive(primitive) for primitive in primitives_str}
 
     return primitives
+
+
+if __name__ == "__main__":
+    from pprint import pprint
+    pprint(get_primitives_dict())

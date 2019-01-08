@@ -25,7 +25,9 @@ class TreeBuilder():
 
     def build_word_tree(self, root_word: str, max_depth: Optional[int]=0) -> Node:
         """
-        Tree building algorithm using breath-first search.
+        Tree building algorithm using breath-first search. In fact, it builds an oriented graph, not a tree.
+
+        If a word appear in its own definition, it is ignored.
 
         :param root_word: the string version of a word
         :param max_depth: the maximum depth for the search
@@ -41,7 +43,7 @@ class TreeBuilder():
         # We start with the root of the tree, the first word, in this set.
         # To use a depth criteria to stop the search, we can split it in two lists, one for the current level of the
         # tree, one for the next level
-        root_word_ = Word[root_word]
+        root_word_ = Word(root_word)
         words_to_process: Dict[str, Word] = dict()
         words_to_process_next_level: Dict[str, Word] = {root_word: root_word_}
         depth = -1
@@ -49,7 +51,7 @@ class TreeBuilder():
         # I we still have words to process in the next level
         while len(words_to_process_next_level) > 0:
             # we break the loop if the maximal depth is reached
-            if max_depth > depth or max_depth < 1: break
+            if max_depth < depth and max_depth > 0: break
 
             words_to_process = words_to_process_next_level
             words_to_process_next_level: Dict[str, Word] = dict()
@@ -73,6 +75,12 @@ class TreeBuilder():
                     elif word in self.processed_words.keys():
                         word_to_process.children.add(self.processed_words[word])
 
+                    elif word in words_to_process.keys():
+                        word_to_process.children.add(words_to_process[word])
+
+                    elif word in words_to_process_next_level.keys():
+                        word_to_process.children.add(words_to_process_next_level[word])
+
                     # if the word is not a primitive or an already processed word, create it and add it to the words to
                     # process (next layer, if relevant)
                     else:
@@ -89,6 +97,7 @@ class TreeBuilder():
                 # words
                 self.processed_words[word_to_process_str] = word_to_process
 
+        # Return the word object of the root word
         return root_word_
 
 
