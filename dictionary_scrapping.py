@@ -50,7 +50,7 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
 
     return word_list, pos_list
 
-def get_stem_word(word: str) -> str:
+def get_lemma_word(word: str) -> str:
     """
     Get the stem of the word being searched
 
