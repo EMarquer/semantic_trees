@@ -52,8 +52,18 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
                     word_list.append(__[2])
                     pos_list.append(__[3])
                 except ValueError:
-                    word_list.append(__[1])
-                    pos_list.append(__[3])
+                    try:
+                        __get_data = get_data(__[1], MCM_URL_STRUCTURE = "https://www.macmillandictionary.com/search/{}/?q={}")
+                        lemma_word =  __get_data.find("span", {"class":"INFLX redword "}).text
+                        if not lemma_word:
+                            lemma_word = re.sub(r"\W+", "-",__get_data.find("span", {"class":"BASE"}).text)
+
+                        word_list.append(lemma_word)
+                        pos_list.append(__[3])
+
+                    except:
+                        word_list.append(__[1])
+                        pos_list.append(__[3])
 
 
 
@@ -106,7 +116,8 @@ def get_lemma_word(word: str) -> str:
 
     return udpipe_checker(word)[0][0]
 
-def get_url(word: str, dictionary: str = 'british') -> str:
+
+def get_url(word: str, dictionary: str = 'british', MCM_URL_STRUCTURE: str = "https://www.macmillandictionary.com/dictionary/{}/{}") -> str:
     """
     Produce the URL of the definition of a word
 
@@ -115,10 +126,10 @@ def get_url(word: str, dictionary: str = 'british') -> str:
     :return: the URL of the word in the dictionary
     """
 
-    return "https://www.macmillandictionary.com/dictionary/{}/{}".format(dictionary, word)
+    return MCM_URL_STRUCTURE.format(dictionary, word)
 
 
-def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
+def get_data(word: str, dictionary: str = 'british',MCM_URL_STRUCTURE: str = "https://www.macmillandictionary.com/dictionary/{}/{}") -> BeautifulSoup:
     """
     Produce the HTML content of the definition of a word
 
@@ -127,10 +138,9 @@ def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
     :return: the HTML content of the definition in the dictionary
     """
     # set the url of the MacMillan dictionary entry for the word
-    dict_url = get_url(word, dictionary)
+    dict_url = get_url(word, dictionary, MCM_URL_STRUCTURE)
 
     # open a connexion to the dictionary page
-
     request = urllib.request.urlopen(dict_url)
 
     # grab the page source content
@@ -140,6 +150,7 @@ def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
         raise ValueError('The word {} is not in the dictionary'.format(word))
     else:
         return dict_fulldata
+
 
 
 def extract_definition(word_input: str, dictionary: str = 'british'):
