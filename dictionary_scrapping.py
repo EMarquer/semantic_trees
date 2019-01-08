@@ -7,7 +7,7 @@ import urllib.request, json
 
 
 # set the UDPipe API IRI structure
-UDPIPE_URL_STRUCTURE = "http://lindat.mff.cuni.cz/services/udpipe/api/process?tokenizer&tagger&parser&model=english-lines-ud-2.3-181115&data={}"
+UDPIPE_URL_STRUCTURE = "http://lindat.mff.cuni.cz/services/udpipe/api/process?tokenizer&tagger&parser&model=english-ewt-ud-2.3-181115&data={}"
 
 # set the list of POS we are interested in
 POS_OF_INTEREST = ["NOUN", "VERB", "ADJ", "ADV", "PART"]
@@ -26,6 +26,8 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
     # McM's definitions has possesive contractions ('s) and it is in unicode format that is throwing an error downstream
     # we replace the utf for ' (i.e. \u2019) with a single quote here to avoid the problem downstream
     string_udpipe_url = string_udpipe_url.replace(u'\u2019', "'")
+    string_udpipe_url = string_udpipe_url.replace(u'\u2018', "'")
+
     with urllib.request.urlopen(string_udpipe_url) as url:
         udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
 
@@ -49,6 +51,42 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
                 pos_list.append(__[3])
 
     return word_list, pos_list
+
+def udpipe_checker_treebuild(context: str, root_word):
+    """
+    takes a string, puts it in a UDPipe API-usable format, calls UDPipe with tokeniser and tagger,
+    extracts the information returned in JSON format and returns a list of words and a list of their
+    corresponding parts of speech.
+
+    input: context:string, root_word:string
+    output: two lists
+    """
+    string_udpipe = "%20".join(context.split(" "))
+    string_udpipe_url = UDPIPE_URL_STRUCTURE.format(string_udpipe)
+    # McM's definitions has possesive contractions ('s) and it is in unicode format that is throwing an error downstream
+    # we replace the utf for ' (i.e. \u2019) with a single quote here to avoid the problem downstream
+    string_udpipe_url = string_udpipe_url.replace(u'\u2019', "'")
+    string_udpipe_url = string_udpipe_url.replace(u'\u2018', "'")
+    with urllib.request.urlopen(string_udpipe_url) as url:
+        udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
+
+    # we only want the result part of the JSON
+    udpipe_result = udpipe_apiresponse["result"]
+    # the results are in a single string and demarcated with newline. so we split them out here
+    udpipe_result_ = udpipe_result.split("\n")
+
+    for i in udpipe_result_:
+        # we are only interested in the lines of the result part of the UDPipe JSON with words and their POS.
+        # these all start with a / and a digit. we use regex to pick these out.
+        if re.match(r'^\d', i):
+            __ = i.split("\t")
+
+            # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
+            if __[1] == root_word:
+
+                return __[2]
+    return root_word
+
 
 def get_lemma_word(word: str) -> str:
     """
@@ -85,6 +123,7 @@ def get_data(word: str, dictionary: str = 'british') -> BeautifulSoup:
     dict_url = get_url(word, dictionary)
 
     # open a connexion to the dictionary page
+
     request = urllib.request.urlopen(dict_url)
 
     # grab the page source content
@@ -158,7 +197,7 @@ def extract_definition(word_input: str, dictionary: str = 'british'):
 
 if __name__ == "__main__":
     # ##### 1. Ask for word, ask for British or American English.
-    word = 'randomeapple'  # input("What is the word you want to build the semantic tree for?")
+    word = 'apple'  # input("What is the word you want to build the semantic tree for?")
     dictionary = 'british'  # input("Do you want the British or the American English definition?")
 
     dict_processed = extract_definition(word, dictionary)

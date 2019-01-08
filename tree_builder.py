@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 from word_tree import Word, Primitive, Node
 from primitives import get_primitives_dict
-
+import dictionary_scrapping
 
 class TreeBuilder():
     # All the primitives.py will be built beforehand
@@ -23,7 +23,7 @@ class TreeBuilder():
         self.primitives: Dict[str, Primitive] = get_primitives_dict()
         self.processed_words: Dict[str, Word] = dict()
 
-    def build_word_tree(self, root_word: str, max_depth: Optional[int]=0) -> Node:
+    def build_word_tree(self, root_word: str, context, max_depth: Optional[int]=0) -> Node:
         """
         Tree building algorithm using breath-first search. In fact, it builds an oriented graph, not a tree.
 
@@ -33,6 +33,13 @@ class TreeBuilder():
         :param max_depth: the maximum depth for the search
         :return: a Word object representing a word, connected to all the necessary words
         """
+        # filter to check if the word put in matches the wordform of the word in the context after lemmatisation
+        root_word = dictionary_scrapping.udpipe_checker_treebuild(context, root_word)
+
+
+
+
+
         # if the word has already been processed or is a primitive, we return the already processed version
         if root_word in self.processed_words.keys():
             return self.processed_words[root_word]
@@ -99,7 +106,3 @@ class TreeBuilder():
 
         # Return the word object of the root word
         return root_word_
-
-
-
-

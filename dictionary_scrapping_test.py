@@ -8,8 +8,8 @@ class DictionaryScrapping(unittest.TestCase):
     ("randomapple", (["randomapple"], ["NOUN"])))
 
     known_values_def = (
-    ("tasting like sugar", (["tast", "sugar"], ["VERB", "NOUN"])),
-        ("a working person has a job", (["work", "person", "have", "job"], ["ADJ", "NOUN", "VERB", "NOUN"])),
+    ("tasting like sugar", (["taste", "sugar"], ["VERB", "NOUN"])),
+        ("a working person has a job", (["working", "person", "have", "job"], ["NOUN", "NOUN", "VERB", "NOUN"])),
         )
 
     known_values_lemma = (("sweet", "sweet"),
@@ -33,6 +33,11 @@ class DictionaryScrapping(unittest.TestCase):
             result = dictionary_scrapping.udpipe_checker(word_in)
             self.assertEqual(result, output)
 
+    def udpipe_checker_treebuild(self):
+        word_in, context, output = ["tasting", "i love tasting things", "taste"]
+        result = dictionary_scrapping.udpipe_checker_treebuild(context, word_in)
+        self.assertEqual(result, output)
+
 
     def test_get_lemma_word(self):
         for word_in, output in self.known_values_lemma:
@@ -54,7 +59,7 @@ class DictionaryScrapping(unittest.TestCase):
         test_data = dictionary_scrapping.extract_definition("sweet")
         self.assertEqual("sweet", test_data["word"])
         self.assertEqual("tasting like sugar", test_data["definitions"]["def_1"]["dictionary_entry"])
-        self.assertEqual(['tast', 'sugar'], test_data["definitions"]["def_1"]["relevant_words"])
+        self.assertEqual(['taste', 'sugar'], test_data["definitions"]["def_1"]["relevant_words"])
 
 
         test_data = dictionary_scrapping.extract_definition("apple")
@@ -73,6 +78,7 @@ class DictionaryScrapping(unittest.TestCase):
  'skin',
  'call',
  'peel',
+ 'when',
  'remove',
  'middle',
  'part',
