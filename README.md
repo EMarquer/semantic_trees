@@ -21,9 +21,13 @@ The following packages are needed:
 * `bs4`
 
 ## Theoretical basis
-### Distance between trees
+### Distance between ordered trees
 * https://www.ifi.uzh.ch/dbtg/teaching/thesesarch/Vertiefung_LeaBay_v2.pdf
 * https://arxiv.org/abs/1508.03381
 * [https://doi.org/10.1007/978-3-642-22194-1_71](https://sci-hub.tw/https://doi.org/10.1007/978-3-642-22194-1_71)
+
+### Distance between unordered trees
+* [https://ieeexplore.ieee.org/document/6630333](https://sci-hub.tw/https://ieeexplore.ieee.org/document/6630333]
+* [https://ieeexplore.ieee.org/document/1260818](https://sci-hub.tw/https://ieeexplore.ieee.org/document/1260818)
 
 ## References
