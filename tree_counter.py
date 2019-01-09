@@ -40,28 +40,47 @@ def root_children(tree_builder, root_word):
 
 def TreeCounter(tree_builder, root_word, max_depth=5):
     depth_counter = 0
-    tree_counter = []
 
-    root_queue = []
-    root = root_word
-    tree_counter.append(root)
-    root_queue += root_children(tree_builder, root_word)
+    # initialise the start of the tree counter with the first layer consisting of the root_word
+    tree_counter = {depth_counter: [root_word]}
 
-    while depth_counter < max_depth and len(root_queue) != 0:
-        root = root_queue.pop(0)
-        tree_counter.append(root)
-        root_queue + root_children(tree_builder, root)
-        depth_counter += 1
+    #maintain a root queue, which we will pop the head of at each step
+    depth_queue = [root_word]
+
+    # we want the children at each step
+    root = depth_queue.pop(0)
+    tree_counter = {depth_counter: [root]}
+
+    children = root_children(tree_builder, root)
+
+    # we append the children to the root_queue
+    depth_queue.append(children)
+
+    depth_counter +=1
+
+    while depth_counter < max_depth and len(depth_queue) !=1:
+        depth_elements = depth_queue.pop(0)
+        for i in depth_elements:
+            root = i
+            tree_counter = {depth_counter: [root]}
+            try:
+                children = root_children(tree_builder, root)
+                depth_queue.append(children)
+                depth_counter +=1
+            except:
+                pass
 
     return tree_counter
 
-def similarity_score(tree_counter):
-        #similarty  by counting number of same words within 2 different tree_counters
-        # disimilarity by counting number of differing words within 2 different tree_counters
+def similarity_score(tree_counter_1, tree_counter_2):
+    #similarty - elements that are in both trees
+    similar = tree_counter_1.union(tree_counter_2)
+    # disimilarity - elements in 1 but not the other
+    difference = tree_counter_1.symmetric_difference(tree_counter_2)
     pass
 
 
 if __name__ == "__main__":
     tree_builder = pickleloader("tree_builder_pickled")
-    pprint.pprint([i for i in tree_builder.processed_words])
-    print(TreeCounter(tree_builder, "ground"))
+    # pprint.pprint([i for i in tree_builder.processed_words])
+    print(TreeCounter(tree_builder, "taste"))

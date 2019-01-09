@@ -105,3 +105,5 @@ venv.bak/
 
 .idea/
 DictionaryScrapping.py
+tree_builder_pickled
+.DS_Store
