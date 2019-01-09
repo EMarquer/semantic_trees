@@ -6,38 +6,19 @@ import sys
 import _pickle as pickle
 import pprint
 from collections import Counter
-
-
-# function to load pickle file
-def pickleloader(filename):
-    # # open the file for writing
-    fileObject = open(filename,'rb')
-
-    # load the object from the file into var univ_processed_train
-    return pickle.load(fileObject,  encoding="latin1")  #latin1 here, to bypass
-                                        # python2 to 3 pickle problem
-
-    # here we close the fileObject
-    fileObject.close()
-
-# function to create a file and store the data in the file
-def picklemaker(filename, objectname):
-    # open the file for writing
-    fileObject = open(filename,'wb')
-
-    # this writes the object a to the
-    # file named 'testfile'
-    pickle.dump(objectname,fileObject)
-
-    # here we close the fileObject
-    fileObject.close()
+from run import pickleloader
 
 
 def tree_counter_launcher(tree_builder: TreeBuilder, root_word: str, max_depth: int = 5) -> Counter:
     """Produce a counter that counts the different words in the tree starting from root_word and with a maximal depth
     of max_depth, according to the semantic graph stored in tree_builder
 
-    This launcher's main is to find the word object in the wordbase
+    This launcher's main is to find the word object in the word database
+
+    :param tree_builder: TreeBuilder containing the word database to explore
+    :param root_word: key/lemma corresponding to the word at the root of the tree
+    :param max_depth: maximal depth of the tree to explore
+    :return: Counter object counting all the word in the tree
     """
 
     try:
@@ -54,12 +35,14 @@ def tree_counter_launcher(tree_builder: TreeBuilder, root_word: str, max_depth: 
 
 
 def tree_counter(root_word: Node, max_depth: int) -> Counter:
-    """Produce a counter that counts the different words in the tree starting from root_word and with a maximal depth
-    of max_depth"""
+    """Recurrent algorithm producing a counter that counts the different words in the tree starting from root_word and with a maximal depth
+    of max_depth, see tree_counter_launcher() for the starting procedure
+
+    :param root_word: node corresponding to the word at the root of the tree
+    :param max_depth: maximal depth of the tree to explore
+    :return: Counter object counting all the word in the tree"""
     counter = Counter()
     counter[root_word] += 1
-    if root_word is None:
-        print(5454)
 
     # if we have not reached the maximal depth, we look at the children
     # word counter
@@ -72,6 +55,21 @@ def tree_counter(root_word: Node, max_depth: int) -> Counter:
 
 
 def similarity_score(tree_counter_1: Counter, tree_counter_2: Counter) -> Tuple[int, int]:
+    """Compute a kind of distance between two trees, by using counters of the words composing those trees
+
+    the first distance value is what we call "similarity":
+
+        similarity = number of words shared by both trees / total umber of words in the two trees
+
+    the second distance value is what we call "difference":
+
+        difference = (number of words of the first tree not in the second one +
+        number of words of the second tree not in the first one) / total umber of words in the two trees
+
+    :param tree_counter_1: counter of the words in the first tree to compare
+    :param tree_counter_2: counter of the words in the second tree to compare
+    :return: tuple of two integers: the similarity ratio, and the difference ratio
+    """
     # similarity - elements that are in both trees
     similarity = tree_counter_1 & tree_counter_2
 

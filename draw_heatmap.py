@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
@@ -130,7 +132,21 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 
-def plot(data_similarity, data_difference, label_noun, label_adjective, two_plots: bool=True) -> None:
+def plot(data_similarity: List[List[float]],
+         data_difference: List[List[float]],
+         label_noun: List[str],
+         label_adjective: List[str],
+         two_plots: Optional[bool]=True) -> None:
+    """Draws the heatmap for two sets of data: a similarity matrix and a difference matrix
+
+    :param data_similarity: two dimensional array of similarity ratios, of size (N * A)
+    :param data_difference: two dimensional array of difference ratios, of size (N * A)
+    :param label_noun: list of labels for the nouns (or the first dimension of the data)
+    :param label_adjective: list of labels for the adjectives (or the second dimension of the data)
+    :param two_plots: optional argument, default value is True; if true, draws similarity and difference on two plots,
+    otherwise draws them on a single plot side by side
+    """
+
     data_percentile_similarity = np.array([[cell * 100 for cell in line] for line in data_similarity])
     data_percentile_difference = np.array([[cell * 100 for cell in line] for line in data_difference])
 
