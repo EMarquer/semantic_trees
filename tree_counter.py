@@ -2,6 +2,7 @@ from tree_builder import TreeBuilder
 import sys
 import _pickle as pickle
 import pprint
+from collections import Counter
 
 
 # function to load pickle file
@@ -29,36 +30,34 @@ def picklemaker(filename, objectname):
     fileObject.close()
 
 
-def root_children(tree_builder, root_word):
-    #get the root word
-    root = tree_builder.processed_words[root_word]
+def TreeCounter(tree_builder, root_Word, max_depth=5):
+    '''
+    A counter that counts the different words in the tree starting from root_word and with a maximal depth of max_depth, according to the semantic graph stored in tree_builder
 
-    # get its children
-    children = root.children
-    children_names = [i.name for i in children]
-    return children_names
+    input:  tree_builder: instance of a tree_builder class
+            root_Word: instancen of a Word class that serves as the root of the tree
+    result: a counter with the counts of each instance of a Word or Primitive within a semantic tree.
+    '''
+    Words_in_tree = []
+    root_Word_queue = [[root_Word]]
+    current_depth = 0
 
-def TreeCounter(tree_builder, root_word, max_depth=5):
-    depth_counter = 0
-    # initialise the start of the tree counter with the first layer consisting of the root_word
-    tree_counter = {depth_counter: [root_word]}
-    depth_counter+=1
+    while current_depth < max_depth and len(root_Word_queue) != 0:
 
-    #maintain a queue of childrens at each level, which we will pop the head of at each step
-    children = root_children(tree_builder, root_word)
-    depth_queue = {depth_counter:children}
-    while depth_counter < max_depth and len(depth_queue) != 0:
-        for i in depth_queue.keys():
-            tree_counter[depth_counter] = []
-            for i2 in depth_queue[i]:
-                tree_counter[depth_counter].append(i2)
-                children = root_children(tree_builder, i2)
+        current_level = root_Word_queue.pop(0)
+        for Word in current_level:
 
-                depth_queue[depth_counter]+= children
-            del depth_queue[depth_counter]
-            depth_counter += 1
+            children_Words = Word.children
 
-    return depth_queue
+            Words_in_tree.append(Word)
+
+            root_Word_queue.append(children_Words)
+
+        current_depth += 1
+
+    word_counter = Counter(Words_in_tree)
+    return word_counter
+
 
 
 
@@ -67,10 +66,40 @@ def similarity_score(tree_counter_1, tree_counter_2):
     similar = tree_counter_1.union(tree_counter_2)
     # disimilarity - elements in 1 but not the other
     difference = tree_counter_1.symmetric_difference(tree_counter_2)
+
+    # we can find the weight of the subtree, by
+
+    str(tree_builder.processed_words["sweet"])
+
+
+    # their child
+    # nodes will be inserted into a priority queue in which the
+    # subtrees with the largest weights are always compared
+    # first.
+
+    # https://sci-hub.tw/https://ieeexplore.ieee.org/document/1260818
+    # Whenever XyDiff finds an exact match between two
+    # subtrees, it attempts to propagate the match to the
+    # respective parents of the two nodes with the weight of
+    # each subtree determining how many levels the matching is
+    # propagated.
+
+    # Whenever there is more than one potential
+    # candidate for matching, XyDiff uses a few simple
+    # heuristic rules to pick one in order to avoid having to
+    # perform a full evaluation of the alternatives. This
+    # algorithm achieves O(nlogn) complexity in execution time
+    # and generates fairly good results in many cases. However,
+    # XyDiff cannot guarantee any form of optimal or nearoptimal result because of the greedy rules used in the
+    # algorithm.
+
     pass
 
 
 if __name__ == "__main__":
     tree_builder = pickleloader("tree_builder_pickled")
     # pprint.pprint([i for i in tree_builder.processed_words])
-    print(TreeCounter(tree_builder, "taste"))
+    # pprint.pprint(str(tree_builder.processed_words["sweet"]))
+    #
+    # pprint.pprint([str(i) for i in tree_builder.processed_words["sweet"].children])
+    pprint.pprint(TreeCounter(tree_builder, tree_builder.processed_words["taste"]))
