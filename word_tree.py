@@ -42,10 +42,14 @@ class Word(Node):
 
         :return: a set of relevant lemmas corresponding to the words in the definition of the current word
         """
-        definitions = dictionary_scrapping.extract_definition(self.name)
-        first_definition = set(definitions["definitions"]["def_1"]['relevant_words'])
+        try:
+            definitions = dictionary_scrapping.extract_definition(self.name)
+            first_definition = set(definitions["definitions"]["def_1"]['relevant_words'])
 
-        return first_definition
+            return first_definition
+
+        except ValueError:
+            return set()
 
 
 class Primitive(Node):
