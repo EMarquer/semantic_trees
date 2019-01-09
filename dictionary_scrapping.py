@@ -2,8 +2,11 @@
 # coding: utf-8
 
 import re
+import time
+
 from bs4 import BeautifulSoup
-import urllib.request, json
+import urllib.request, json, urllib.error
+from unidecode import unidecode
 
 
 # set the UDPipe API IRI structure
@@ -25,49 +28,64 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
     string_udpipe_url = UDPIPE_URL_STRUCTURE.format(string_udpipe)
     # McM's definitions has possesive contractions ('s) and it is in unicode format that is throwing an error downstream
     # we replace the utf for ' (i.e. \u2019) with a single quote here to avoid the problem downstream
-    string_udpipe_url = string_udpipe_url.replace(u'\u2019', "'")
-    string_udpipe_url = string_udpipe_url.replace(u'\u2018', "'")
+    string_udpipe_url = unidecode(string_udpipe_url)
 
-    with urllib.request.urlopen(string_udpipe_url) as url:
-        udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
+    try:
+        with urllib.request.urlopen(string_udpipe_url) as url:
+            udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
 
-    # we only want the result part of the JSON
-    udpipe_result = udpipe_apiresponse["result"]
-    # the results are in a single string and demarcated with newline. so we split them out here
-    udpipe_result_ = udpipe_result.split("\n")
 
-    word_list = []
-    pos_list = []
+        # we only want the result part of the JSON
+        udpipe_result = udpipe_apiresponse["result"]
+        # the results are in a single string and demarcated with newline. so we split them out here
+        udpipe_result_ = udpipe_result.split("\n")
 
-    for i in udpipe_result_:
-        # we are only interested in the lines of the result part of the UDPipe JSON with words and their POS.
-        # these all start with a / and a digit. we use regex to pick these out.
-        if re.match(r'^\d', i):
-            __ = i.split("\t")
+        word_list = []
+        pos_list = []
 
-            # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
-            if __[3] in pos_of_interest:
-                try:
-                    get_data(__[2])
-                    word_list.append(__[2])
-                    pos_list.append(__[3])
-                except ValueError:
+        for i in udpipe_result_:
+            # we are only interested in the lines of the result part of the UDPipe JSON with words and their POS.
+            # these all start with a / and a digit. we use regex to pick these out.
+            if re.match(r'^\d', i):
+                __ = i.split("\t")
+
+                # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
+                if __[3] in pos_of_interest:
                     try:
-                        __get_data = get_data(__[1], MCM_URL_STRUCTURE = "https://www.macmillandictionary.com/search/{}/?q={}")
-                        lemma_word =  __get_data.find("span", {"class":"INFLX redword "}).text
-                        if not lemma_word:
-                            lemma_word = re.sub(r"\W+", "-",__get_data.find("span", {"class":"BASE"}).text)
-
-                        word_list.append(lemma_word)
+                        get_data(__[2])
+                        word_list.append(__[2])
                         pos_list.append(__[3])
+                    except ValueError:
+                        try:
+                            __get_data = get_data(__[1], MCM_URL_STRUCTURE="https://www.macmillandictionary.com/search/{}/?q={}")
+                            try:
+                                lemma_word = __get_data.find("span", {"class":"INFLX redword "}).text
+                            except Exception:
+                                try:
+                                    lemma_word = __get_data.find("span", {"class":"redword"}).text
+                                except Exception:
+                                    lemma_word = re.sub(r"\W+", "-",__get_data.find("span", {"class":"BASE"}).text)
 
-                    except:
-                        word_list.append(__[1])
-                        pos_list.append(__[3])
+                            word_list.append(lemma_word)
+                            pos_list.append(__[3])
+                            print("Replaced '{}' with '{}' for word '{}'".format(__[2], lemma_word, __[1]))
 
+                        except ValueError:
+                            # if the word is not recognised either way, we do not use it
+                            #word_list.append(__[1])
+                            #pos_list.append(__[3])
+                            print("Ignored unknown lemma '{}' for word '{}'".format(__[2],  __[1]))
+                            pass
 
+                        except Exception:
+                            pass
 
-    return word_list, pos_list
+        return word_list, pos_list
+
+    except (urllib.error.HTTPError, urllib.error.URLError, urllib.error.ContentTooShortError) as e:
+        print(e.info())
+        return [], []
+
 
 def udpipe_checker_treebuild(context: str, root_word):
     """
@@ -82,27 +100,32 @@ def udpipe_checker_treebuild(context: str, root_word):
     string_udpipe_url = UDPIPE_URL_STRUCTURE.format(string_udpipe)
     # McM's definitions has possesive contractions ('s) and it is in unicode format that is throwing an error downstream
     # we replace the utf for ' (i.e. \u2019) with a single quote here to avoid the problem downstream
-    string_udpipe_url = string_udpipe_url.replace(u'\u2019', "'")
-    string_udpipe_url = string_udpipe_url.replace(u'\u2018', "'")
-    with urllib.request.urlopen(string_udpipe_url) as url:
-        udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
+    string_udpipe_url = unidecode(string_udpipe_url)
 
-    # we only want the result part of the JSON
-    udpipe_result = udpipe_apiresponse["result"]
-    # the results are in a single string and demarcated with newline. so we split them out here
-    udpipe_result_ = udpipe_result.split("\n")
+    try:
+        with urllib.request.urlopen(string_udpipe_url) as url:
+            udpipe_apiresponse = json.loads(url.read().decode('utf-8'))
 
-    for i in udpipe_result_:
-        # we are only interested in the lines of the result part of the UDPipe JSON with words and their POS.
-        # these all start with a / and a digit. we use regex to pick these out.
-        if re.match(r'^\d', i):
-            __ = i.split("\t")
+        # we only want the result part of the JSON
+        udpipe_result = udpipe_apiresponse["result"]
+        # the results are in a single string and demarcated with newline. so we split them out here
+        udpipe_result_ = udpipe_result.split("\n")
 
-            # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
-            if __[1] == root_word:
+        for i in udpipe_result_:
+            # we are only interested in the lines of the result part of the UDPipe JSON with words and their POS.
+            # these all start with a / and a digit. we use regex to pick these out.
+            if re.match(r'^\d', i):
+                __ = i.split("\t")
 
-                return __[2]
-    return root_word
+                # index position 1 and 3 of every line in the results part of UDPipe JSON is the word and its corresponding POS
+                if __[1] == root_word:
+
+                    return __[2]
+        return root_word
+
+    except (urllib.error.HTTPError, urllib.error.URLError, urllib.error.ContentTooShortError) as e:
+        print(e.info())
+        return root_word
 
 
 def get_lemma_word(word: str) -> str:
@@ -141,7 +164,15 @@ def get_data(word: str, dictionary: str = 'british',MCM_URL_STRUCTURE: str = "ht
     dict_url = get_url(word, dictionary, MCM_URL_STRUCTURE)
 
     # open a connexion to the dictionary page
-    request = urllib.request.urlopen(dict_url)
+    try:
+        request = urllib.request.urlopen(dict_url)
+    except urllib.error.URLError:
+        try:
+            request = urllib.request.urlopen(dict_url)
+            time.sleep(1)
+        except urllib.error.URLError:
+            request = urllib.request.urlopen(dict_url)
+            time.sleep(10)
 
     # grab the page source content
     dict_fulldata = BeautifulSoup(request, "lxml")
