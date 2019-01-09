@@ -1,4 +1,7 @@
-from tree_builder import TreeBuilder
+from email.policy import default
+from typing import Tuple
+
+from tree_builder import TreeBuilder, Node
 import sys
 import _pickle as pickle
 import pprint
@@ -30,76 +33,69 @@ def picklemaker(filename, objectname):
     fileObject.close()
 
 
-def TreeCounter(tree_builder, root_Word, max_depth=5):
-    '''
-    A counter that counts the different words in the tree starting from root_word and with a maximal depth of max_depth, according to the semantic graph stored in tree_builder
+def tree_counter_launcher(tree_builder: TreeBuilder, root_word: str, max_depth: int = 5) -> Counter:
+    """Produce a counter that counts the different words in the tree starting from root_word and with a maximal depth
+    of max_depth, according to the semantic graph stored in tree_builder
 
-    input:  tree_builder: instance of a tree_builder class
-            root_Word: instancen of a Word class that serves as the root of the tree
-    result: a counter with the counts of each instance of a Word or Primitive within a semantic tree.
-    '''
-    Words_in_tree = []
-    root_Word_queue = [[root_Word]]
-    current_depth = 0
+    This launcher's main is to find the word object in the wordbase
+    """
 
-    while current_depth < max_depth and len(root_Word_queue) != 0:
+    try:
+        # Find the word in the wordbase
+        root_word_node = tree_builder.primitives.get(root_word,  # we search the word among the primitives
+                                                     # if we do net find it we search among the processed words
+                                                     tree_builder.processed_words.get(root_word))
 
-        current_level = root_Word_queue.pop(0)
-        for Word in current_level:
+        return tree_counter(root_word_node, max_depth)
 
-            children_Words = Word.children
-
-            Words_in_tree.append(Word)
-
-            root_Word_queue.append(children_Words)
-
-        current_depth += 1
-
-    word_counter = Counter(Words_in_tree)
-    return word_counter
+    except KeyError:
+        print("Word {} is not present in the wordbase".format(root_word))
+        return Counter()
 
 
+def tree_counter(root_word: Node, max_depth: int) -> Counter:
+    """Produce a counter that counts the different words in the tree starting from root_word and with a maximal depth
+    of max_depth"""
+    counter = Counter()
+    counter[root_word] += 1
+    if root_word is None:
+        print(5454)
+
+    # if we have not reached the maximal depth, we look at the children
+    # word counter
+    if max_depth > 0:
+        # Add the counters of all the children of the node
+        for child in root_word.children:
+            counter += tree_counter(child, max_depth - 1)
+
+    return counter
 
 
-def similarity_score(tree_counter_1, tree_counter_2):
-    #similarty - elements that are in both trees
-    similar = tree_counter_1.union(tree_counter_2)
-    # disimilarity - elements in 1 but not the other
-    difference = tree_counter_1.symmetric_difference(tree_counter_2)
+def similarity_score(tree_counter_1: Counter, tree_counter_2: Counter) -> Tuple[int, int]:
+    # similarity - elements that are in both trees
+    similarity = tree_counter_1 & tree_counter_2
 
-    # we can find the weight of the subtree, by
+    # dissimilarity - elements in 1 but not the other
+    # create a copy of the counter and subtract the second counter to it
+    difference = Counter(tree_counter_1)
+    difference.subtract(tree_counter_2)
+    # get the absolute value
+    for key in difference: difference[key] = abs(difference[key])
 
-    str(tree_builder.processed_words["sweet"])
+    # total
+    total = tree_counter_1 + tree_counter_2
 
+    # produce the ratios
+    similarity_ratio = sum(similarity.values()) / sum(total.values())
+    difference_ratio = sum(difference.values()) / sum(total.values())
 
-    # their child
-    # nodes will be inserted into a priority queue in which the
-    # subtrees with the largest weights are always compared
-    # first.
-
-    # https://sci-hub.tw/https://ieeexplore.ieee.org/document/1260818
-    # Whenever XyDiff finds an exact match between two
-    # subtrees, it attempts to propagate the match to the
-    # respective parents of the two nodes with the weight of
-    # each subtree determining how many levels the matching is
-    # propagated.
-
-    # Whenever there is more than one potential
-    # candidate for matching, XyDiff uses a few simple
-    # heuristic rules to pick one in order to avoid having to
-    # perform a full evaluation of the alternatives. This
-    # algorithm achieves O(nlogn) complexity in execution time
-    # and generates fairly good results in many cases. However,
-    # XyDiff cannot guarantee any form of optimal or nearoptimal result because of the greedy rules used in the
-    # algorithm.
-
-    pass
+    return similarity_ratio, difference_ratio
 
 
 if __name__ == "__main__":
     tree_builder = pickleloader("tree_builder_pickled")
     # pprint.pprint([i for i in tree_builder.processed_words])
-    # pprint.pprint(str(tree_builder.processed_words["sweet"]))
-    #
-    # pprint.pprint([str(i) for i in tree_builder.processed_words["sweet"].children])
-    pprint.pprint(TreeCounter(tree_builder, tree_builder.processed_words["taste"]))
+    print(tree_counter_launcher(tree_builder, "taste"))
+
+    print(tree_builder.processed_words.keys())
+    print(similarity_score(tree_counter_launcher(tree_builder, "taste"), tree_counter_launcher(tree_builder, "food")))

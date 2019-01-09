@@ -83,7 +83,7 @@ def udpipe_checker(string: str, pos_of_interest=POS_OF_INTEREST):
         return word_list, pos_list
 
     except (urllib.error.HTTPError, urllib.error.URLError, urllib.error.ContentTooShortError) as e:
-        print(e.info())
+        print(e)
         return [], []
 
 

@@ -1,6 +1,6 @@
 from tree_builder import TreeBuilder
 import sys
-import _pickle as pickle
+import pickle as pickle
 
 word = (len(sys.argv) > 1 and sys.argv[1]) or "hello"
 context = (len(sys.argv) > 2 and sys.argv[2]) or "hello this is a test"

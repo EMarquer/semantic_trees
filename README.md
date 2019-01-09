@@ -14,11 +14,13 @@ Method for NLP project
 * `dictionary_scrapping_test.py`: unit tests for `extract_xml.py`
 
 ## Setup & Dependencies
-This project is built using Python >= 3.6
+This project is built using Python 3.7
 
 The following packages are needed:
-* `lxml` (see https://stackoverflow.com/a/19940637)
+* `lxml`
 * `bs4`
+* `unidecode`
+* `pickle`
 
 ## Theoretical basis
 ### Distance between ordered trees
