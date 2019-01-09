@@ -15,7 +15,7 @@
 1. [ ] **[WIP]** Build the tree for all the words and adjectives
 
 ## Step 4 (Compare trees to rate sentences)
-1. [ ] Implement a way to compare trees
+1. [ ] **[WIP]** Implement a way to compare trees
 2. [ ] Generate a 'compatibility matrix' for the words and adjectives, and format it beautifully
 
 # TODO
@@ -24,7 +24,19 @@
     1. [ ] **[WIP]** Build the trees for all the nouns in `noun_contexts.csv`
     2. [ ] Build the trees for all the nouns in `adj_contexts.csv`
 
-5. Implement the difference between two trees
+5. **[WIP]** Implement the difference between two trees
+    1. [ ] Implement the tree exploration and counter building
+    2. [ ] Implement the 'Difference ratio' 
+    (sum of all the words that are not shared by both words / sum of all words in both tree)
+    3. [ ] Implement the 'Similarity ratio' 
+    (sum of all the words that are shared by both words / sum of all words in both tree)
+    4. [ ] Implement the tree exploration and counter building
+    
+6. Produce a "compatibility matrix" (A matrix with one dimension being the nouns and the other being the adjectives)
+    1. [ ] Produce a 'Difference ratio' matrix
+    1. [ ] Produce a 'Similarity ratio' matrix
+    3. [ ] Produce a version of the matrix with cell coloration corresponding to the value of the ratio 
+    (the higher the ratio, the redder the color, for a green-red color scale)
 
 ## Completed steps
 1. Semantic tree example, class and unit test (we call similar procedures "test driven programing")
