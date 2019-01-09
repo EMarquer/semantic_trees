@@ -40,37 +40,27 @@ def root_children(tree_builder, root_word):
 
 def TreeCounter(tree_builder, root_word, max_depth=5):
     depth_counter = 0
-
     # initialise the start of the tree counter with the first layer consisting of the root_word
     tree_counter = {depth_counter: [root_word]}
+    depth_counter+=1
 
-    #maintain a root queue, which we will pop the head of at each step
-    depth_queue = [root_word]
+    #maintain a queue of childrens at each level, which we will pop the head of at each step
+    children = root_children(tree_builder, root_word)
+    depth_queue = {depth_counter:children}
+    while depth_counter < max_depth and len(depth_queue) != 0:
+        for i in depth_queue.keys():
+            tree_counter[depth_counter] = []
+            for i2 in depth_queue[i]:
+                tree_counter[depth_counter].append(i2)
+                children = root_children(tree_builder, i2)
 
-    # we want the children at each step
-    root = depth_queue.pop(0)
-    tree_counter = {depth_counter: [root]}
+                depth_queue[depth_counter]+= children
+            del depth_queue[depth_counter]
+            depth_counter += 1
 
-    children = root_children(tree_builder, root)
+    return depth_queue
 
-    # we append the children to the root_queue
-    depth_queue.append(children)
 
-    depth_counter +=1
-
-    while depth_counter < max_depth and len(depth_queue) !=1:
-        depth_elements = depth_queue.pop(0)
-        for i in depth_elements:
-            root = i
-            tree_counter = {depth_counter: [root]}
-            try:
-                children = root_children(tree_builder, root)
-                depth_queue.append(children)
-                depth_counter +=1
-            except:
-                pass
-
-    return tree_counter
 
 def similarity_score(tree_counter_1, tree_counter_2):
     #similarty - elements that are in both trees
