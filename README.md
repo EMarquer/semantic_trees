@@ -46,7 +46,36 @@ The following packages are needed:
 * `pickle`
 
 ## Usage
-***TODO***
+To use the file contained in this repository, you can either use each file individually or use only the intended 
+process. I you wish to use each file individually, there is for most of them a ``if __name__ == '__main__':`` statement
+giving an example of how to use the different processes of the file and what kind of result they give.
+
+### Intended use
+The intended use is composed of two main steps:
+1. creating and populating a word database, which means creating an oriented semantic graph of as set of 
+interesting words according to their definition in the McMillan dictionary;
+2. using the created graph to explore the semantic trees of specific words and comparing them.
+
+#### Fist step: creating and populating a word database
+This step is currently really long (more than 4 hours for 1 word and a maximal distance to the word of 10), so we 
+provide a sample database in the pickled TreeBuilder `tree_builder_pickled` and a larger one in 
+`tree_builder_pickled_large`.
+
+If you still want to create another word database, modify `large_run.py` by replacing the word list file
+(`..._contexts.csv`) by your own using a similar structure. Then, choose the maximal distance to the word for 
+construction of the graph (last argument `10` in `tree_builder.build_word_tree(word, context, 10)`).
+You can now run the script and wait for your database to be populated.
+
+The last option is to use a given database, and to add now words to it.
+Do do so, you will need to unpickle a database, run `build_tree(new_word, context_for_the_new_word)` on it, then 
+pickling it once again (you can see that process in the ``if __name__ == '__main__':`` statement in `run.py`)
+
+#### Second step: exploring the graph
+The second step is to use the graph to compare words. To do so, you can either draw a similarity matrix heatmap (refer 
+to the ``if __name__ == '__main__':`` statement in `draw_heatmap.py`) or just get the similarity ratio between two words
+(refer to the ``if __name__ == '__main__':`` statement in `tree_counter.py`).
+
+To directly obtain results from a word database, just run `draw_heatmap.py`.
 
 ## Theoretical basis
 ### Distance between ordered trees
