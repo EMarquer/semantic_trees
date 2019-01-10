@@ -66,6 +66,10 @@ If you still want to create another word database, modify `large_run.py` by repl
 construction of the graph (last argument `10` in `tree_builder.build_word_tree(word, context, 10)`).
 You can now run the script and wait for your database to be populated.
 
+The last option is to use a given database, and to add now words to it.
+Do do so, you will need to unpickle a database, run `build_tree(new_word, context_for_the_new_word)` on it, then 
+pickling it once again (you can see that process in the ``if __name__ == '__main__':`` statement in `run.py`)
+
 #### Second step: exploring the graph
 The second step is to use the graph to compare words. To do so, you can either draw a similarity matrix heatmap (refer 
 to the ``if __name__ == '__main__':`` statement in `draw_heatmap.py`) or just get the similarity ratio between two words
